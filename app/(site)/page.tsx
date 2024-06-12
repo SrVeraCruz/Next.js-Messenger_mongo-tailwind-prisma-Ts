@@ -12,7 +12,7 @@ export default function Home() {
         className="sm:mx-auto sm:w-full sm:max-w-md"
       >
         <img 
-          src="/logo.png" 
+          src="/images/logo.png" 
           alt="logo" 
           className="mx-auto w-20 h-20" 
         />
