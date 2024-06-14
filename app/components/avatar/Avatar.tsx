@@ -18,7 +18,9 @@ export default function Avatar({
         <Image 
           src={user?.image || '/images/placeholder-user.jpg'}
           alt="avatar"
-          fill
+          width={100}
+          height={100}
+          priority
         />
       </div>
       <span 
