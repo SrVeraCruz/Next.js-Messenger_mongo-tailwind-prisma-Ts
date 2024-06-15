@@ -21,7 +21,7 @@ export default function ConversationBox({
   const router = useRouter()
 
   const handleClick = useCallback(() => {
-    router.push(`/conversation/${data.id}`)
+    router.push(`/conversations/${data.id}`)
   }, [data.id, router])
 
   const lastMessage = useMemo(() => {
