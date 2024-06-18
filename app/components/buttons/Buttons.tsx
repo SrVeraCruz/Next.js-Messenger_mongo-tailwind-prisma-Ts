@@ -13,7 +13,7 @@ interface ButtonProps {
 }
 
 export default function Button({
-  type,
+  type = 'button',
   fullWidth,
   children,
   onClick,

@@ -32,10 +32,13 @@ export default function Avatar({
       <span 
         className={clsx(`
           absolute block rounded-full 
-          ring-2 ring-white bg-green-500  
+          ring-white bg-green-500  
         `,
-          big ? 'size-3 md:size-4 md:top-1 md:right-1 top-1.5 right-1.5' 
-              : 'size-2 md:size-[0.6rem] top-0 right-0'
+          big 
+            ? `size-3 md:size-4 md:top-1 md:right-1 
+              top-[0.31rem] right-[0.31rem] ring-[0.16rem]
+            `
+            : `size-2 md:size-[0.6rem] top-0 right-0 ring-2`
         )}
       />
     </div>
