@@ -1,4 +1,5 @@
 import Avatar from "@/app/components/avatar/Avatar"
+import AvatarGroup from "@/app/components/avatarGroup/AvatarGroup"
 import useOtherUser from "@/app/hooks/useOtherUser"
 import { FullConversationType } from "@/app/types"
 import clsx from "clsx"
@@ -72,7 +73,11 @@ export default function ConversationBox({
         selected ? 'bg-neutral-100' : 'bg-white'
       )}
     >
-      <Avatar user={otherUser} />
+      {data?.isGroup ? (
+        <AvatarGroup users={data.users} />
+      ) : (
+        <Avatar user={otherUser} />
+      )}
       <div className="min-w-0 flex-1">
         <div className="focus:outline-none">
           <div className="flex justify-between items-center mb-1">

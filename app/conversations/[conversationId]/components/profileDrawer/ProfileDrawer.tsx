@@ -1,14 +1,19 @@
 "use client"
 
 import Avatar from "@/app/components/avatar/Avatar"
-import Modal from "@/app/components/modal/Modal"
 import useOtherUser from "@/app/hooks/useOtherUser"
-import { Dialog, DialogPanel, Transition, TransitionChild } from "@headlessui/react"
+import { 
+  Dialog, 
+  DialogPanel, 
+  Transition, 
+  TransitionChild 
+} from "@headlessui/react"
 import { Conversation, User } from "@prisma/client"
 import { format } from "date-fns"
 import { Fragment, useMemo, useState } from "react"
 import { IoClose, IoTrash } from "react-icons/io5"
 import ConfirmModal from "../confirmModal/ConfirmModal"
+import AvatarGroup from "@/app/components/avatarGroup/AvatarGroup"
 
 interface ProfileDrawerProps {
   isOpen: boolean,
@@ -112,7 +117,11 @@ export default function ProfileDrawer({
                       <div className="relative mt-6 flex-1 px-4 sm:px-6">
                         <div className="flex flex-col items-center">
                           <div className="mb-2">
-                            <Avatar big user={otherUser} />
+                            {data.isGroup ? (
+                              <AvatarGroup big users={data.users} />
+                            ) : (
+                              <Avatar big user={otherUser} />
+                            )}
                           </div>
                           <div className="capitalize">
                             {title}
@@ -143,6 +152,24 @@ export default function ProfileDrawer({
                           </div>
                           <div className="w-full py-5 sm:py-0">
                             <dl className="space-y-8 px-4 sm:space-y-6 sm:px-6">
+                              {data.isGroup && (
+                                <div>
+                                  <dt
+                                    className="text-sm font-medium text-gray-500 
+                                    sm:w-40 sm:flex-shrink-0"
+                                  >
+                                    Email
+                                  </dt>
+                                  <dd 
+                                    className="mt-1 text-sm text-gray-900
+                                      sm:col-span-2
+                                    "
+                                  >
+                                    {data.users.map(user => user.email).join(', ')}
+                                  </dd>
+                                </div>
+                              )}
+
                               {!data?.isGroup && (
                                 <div>
                                   <dt

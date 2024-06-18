@@ -36,8 +36,8 @@ export default function SettingsModal({
     }
   } = useForm<FieldValues>({
     defaultValues: {
-      name: currentUser.name,
-      image: currentUser.image
+      name: currentUser?.name,
+      image: currentUser?.image
     }
   })
 
@@ -140,6 +140,7 @@ export default function SettingsModal({
             <Button
               disabled={isLoading}
               secondary
+              onClick={onClose}
             >
               Cancel
             </Button>
