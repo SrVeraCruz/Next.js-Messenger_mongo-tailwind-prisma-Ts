@@ -81,7 +81,7 @@ export default function MessageBox({
         </div>
         {isLast && isOwn && seenList.length > 0 && (
           <div className="text-xs font-light text-gray-500">
-            {`Seen by ${seenList}`}
+            Seen by <span className="capitalize">{seenList}</span>
           </div>
         )}
       </div>
