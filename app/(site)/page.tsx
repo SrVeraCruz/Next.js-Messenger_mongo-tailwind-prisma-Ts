@@ -1,3 +1,4 @@
+import Image from "next/image";
 import AuthForm from "./components/authForm/AuthForm";
 
 export default function Home() {
@@ -11,10 +12,12 @@ export default function Home() {
       <div 
         className="sm:mx-auto sm:w-full sm:max-w-md"
       >
-        <img 
+        <Image 
+          width={90}
+          height={90}
           src="/images/logo.png" 
           alt="logo" 
-          className="mx-auto w-20 h-20" 
+          className="mx-auto" 
         />
         <h2 
           className="text-center text-3xl font-bold tracking-tight text-gray-900"

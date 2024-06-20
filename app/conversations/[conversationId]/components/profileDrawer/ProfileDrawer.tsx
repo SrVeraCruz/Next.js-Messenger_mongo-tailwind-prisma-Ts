@@ -49,7 +49,7 @@ export default function ProfileDrawer({
     }
 
     return isActive ? 'Online' : 'Offline'
-  }, [data])
+  }, [data, isActive])
   
   return (
     <>
