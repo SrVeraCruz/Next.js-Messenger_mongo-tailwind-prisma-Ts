@@ -2,13 +2,17 @@
 
 import { User } from "@prisma/client"
 import UserBox from "../userBox/UserBox"
+import Avatar from "@/app/components/avatar/Avatar"
+import MobileHeader from "@/app/components/sidebar/MobileHeader"
 
 interface UserListProps {
-  items: User[]
+  items: User[],
+  currentUser: User
 }
 
 export default function UserList({
   items,
+  currentUser
 }: UserListProps) {
 
   return (
@@ -19,11 +23,15 @@ export default function UserList({
       "
     >
       <div className="px-5">
-        <div className="flex flex-col">
-          <div className="text-2xl font-bold text-neutral-800 py-4">
-            People
+        <MobileHeader
+          currentUser={currentUser}
+        >
+          <div className="flex flex-col">
+            <div className="text-2xl font-bold text-neutral-800 py-4">
+              People
+            </div>
           </div>
-        </div>
+        </MobileHeader>
 
         {items.map(item => (
           <div key={item.id}>

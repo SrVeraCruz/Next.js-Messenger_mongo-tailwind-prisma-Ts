@@ -12,14 +12,17 @@ import { User } from "@prisma/client"
 import { useSession } from "next-auth/react"
 import { pusherClient } from "@/app/libs/pusher"
 import { find } from "lodash"
+import MobileHeader from "@/app/components/sidebar/MobileHeader"
 
 interface ConversationListProps {
   users: User[]
+  currentUser: User
   initialItems: FullConversationType[]
 }
 
 export default function ConversationList({
   users,
+  currentUser,
   initialItems
 }: ConversationListProps) {
   const session = useSession()
@@ -102,20 +105,24 @@ export default function ConversationList({
         )}
       >
         <div className="px-5">
-          <div className="flex justify-between mb-4 pt-4">
-            <div className="text-2xl font-bold text-neutral-800">
-              Messages
+          <MobileHeader
+            currentUser={currentUser}
+          >
+            <div className="flex flex-1 justify-between mb-4 pt-4">
+              <div className="text-2xl font-bold text-neutral-800">
+                Messages
+              </div>
+              <div 
+                onClick={() => setIsModalOpen(true)}
+                className="rounded-full p-2 text-gray-600 
+                  bg-gray-100 cursor-pointer hover:opacity-75 
+                  transition
+                "
+              >
+                <MdOutlineGroupAdd size={20} />
+              </div>
             </div>
-            <div 
-              onClick={() => setIsModalOpen(true)}
-              className="rounded-full p-2 text-gray-600 
-                bg-gray-100 cursor-pointer hover:opacity-75 
-                transition
-              "
-            >
-              <MdOutlineGroupAdd size={20} />
-            </div>
-          </div>
+          </MobileHeader>
           {items.map(item => (
             <div key={item.id}>
               <ConversationBox
