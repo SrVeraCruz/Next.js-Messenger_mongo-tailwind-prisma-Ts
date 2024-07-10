@@ -4,12 +4,11 @@ import Avatar from "@/app/components/avatar/Avatar"
 import useOtherUser from "@/app/hooks/useOtherUser"
 import { Conversation, User } from "@prisma/client"
 import Link from "next/link"
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import { HiChevronLeft, HiEllipsisHorizontal } from "react-icons/hi2"
 import ProfileDrawer from "../profileDrawer/ProfileDrawer"
 import AvatarGroup from "@/app/components/avatarGroup/AvatarGroup"
 import useActiveList from "@/app/hooks/useActiveList"
-import { pusherClient } from "@/app/libs/pusher"
 import useTypingStatus from "@/app/hooks/useTypingStatus"
 
 interface HeaderProps {

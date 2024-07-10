@@ -8,17 +8,20 @@ import MessageInput from "../messageInput/MessageInput"
 import { CldUploadButton } from "next-cloudinary"
 import { useRef } from "react"
 import { debounce } from "lodash"
-import useTypingStatus from "@/app/hooks/useTypingStatus"
-import { User } from "@prisma/client"
+import { Conversation, User } from "@prisma/client"
+import useOtherUser from "@/app/hooks/useOtherUser"
 
 interface FormProps {
-  currentUser: User
+  conversation: Conversation & {
+    users: User[]
+  }
 }
 
 export default function Form({
-  currentUser
+  conversation
 }: FormProps ) {
   const { conversationId } = useConversation()
+  const otherUser = useOtherUser(conversation)
 
   const {
     register,
@@ -51,7 +54,7 @@ export default function Form({
 
   const debounceTyping = useRef(
     debounce(() => {
-      axios.post('/api/typing', { conversationId })
+      axios.post('/api/typing', { typingUserId: otherUser?.id })
     }, 300)
 
   ).current

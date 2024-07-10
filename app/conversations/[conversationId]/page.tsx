@@ -7,7 +7,7 @@ import Form from "./components/form/Form"
 import getCurrentUser from "@/app/actions/getCurrentUser"
 
 interface IParams {
-  conversationId: string
+  conversationId: string,
 }
 
 export default async function ConversationId(
@@ -32,7 +32,9 @@ export default async function ConversationId(
       <div className="h-full flex flex-col">
         <Header conversation={conversation} />
         <Body initialMessages={message} />
-        <Form currentUser={currentUser!} />
+        <Form 
+          conversation={conversation} 
+        />
       </div>
     </div>
   )
