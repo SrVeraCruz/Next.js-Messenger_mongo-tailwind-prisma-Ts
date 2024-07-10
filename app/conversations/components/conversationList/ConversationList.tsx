@@ -100,7 +100,7 @@ export default function ConversationList({
     }
 
     channel.bind('typing', typingHandler)
-
+ 
     return () => {
       channel.unbind('typing', typingHandler)
       channel.unsubscribe()
