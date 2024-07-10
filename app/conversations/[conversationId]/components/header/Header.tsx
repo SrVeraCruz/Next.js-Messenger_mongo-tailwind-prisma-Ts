@@ -23,7 +23,7 @@ export default function Header({
 }: HeaderProps) {
   const otherUser = useOtherUser(conversation)
   const [drawerOpen, setDrawerOpen] = useState(false)
-  const { addTypingMember, removeTypingMember, typingMembers } = useTypingStatus()
+  const { typingMembers } = useTypingStatus()
 
   const { members } = useActiveList()
   const isActive = members.indexOf(otherUser.email!) !== -1
@@ -43,22 +43,6 @@ export default function Header({
 
     return isActive ? 'Online' : 'Offline'
   }, [conversation, isActive])
-
-  useEffect(() => {
-    const channel = pusherClient.subscribe('chat')
-
-    const typingHandler = (id: string) => {
-      addTypingMember(id)
-      setTimeout(() => removeTypingMember(id), 3000)
-    }
-
-    channel.bind('typing', typingHandler)
-
-    return () => {
-      channel.unbind('typing', typingHandler)
-      channel.unsubscribe()
-    }
-  }, [addTypingMember, removeTypingMember])
 
 
   return (

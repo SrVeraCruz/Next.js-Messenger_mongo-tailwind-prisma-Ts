@@ -33,7 +33,7 @@ export default function ProfileDrawer({
 }: ProfileDrawerProps) {
   const otherUser = useOtherUser(data)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const { addTypingMember, removeTypingMember, typingMembers } = useTypingStatus()
+  const { typingMembers } = useTypingStatus()
 
   const { members } = useActiveList()
   const isActive = members.indexOf(otherUser.email!) !== -1
@@ -61,22 +61,6 @@ export default function ProfileDrawer({
 
     return isActive ? 'Online' : 'Offline'
   }, [data, isActive])
-
-  useEffect(() => {
-    const channel = pusherClient.subscribe('chat')
-
-    const typingHandler = (id: string) => {
-      addTypingMember(id)
-      setTimeout(() => removeTypingMember(id), 3000)
-    }
-
-    channel.bind('typing', typingHandler)
-
-    return () => {
-      channel.unbind('typing', typingHandler)
-      channel.unsubscribe()
-    }
-  }, [addTypingMember, removeTypingMember])
   
   return (
     <>
