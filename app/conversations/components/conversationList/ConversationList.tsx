@@ -92,7 +92,7 @@ export default function ConversationList({
   }, [pusherKey, conversationId, router])
 
   useEffect(() => {
-    const channel = pusherClient.subscribe('chat')
+    const channel = pusherClient.subscribe(conversationId)
 
     const typingHandler = (id: string) => {
       addTypingMember(id)
@@ -105,7 +105,7 @@ export default function ConversationList({
       channel.unbind('typing', typingHandler)
       channel.unsubscribe()
     }
-  }, [addTypingMember, removeTypingMember])
+  }, [addTypingMember, removeTypingMember, conversationId])
 
   return (
     <>

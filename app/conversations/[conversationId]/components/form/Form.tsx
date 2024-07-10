@@ -51,7 +51,7 @@ export default function Form({
 
   const debounceTyping = useRef(
     debounce(() => {
-      axios.post('/api/typing')
+      axios.post('/api/typing', { conversationId })
     }, 300)
 
   ).current
