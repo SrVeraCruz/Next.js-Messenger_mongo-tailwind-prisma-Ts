@@ -6,8 +6,18 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
 import { HiPaperAirplane, HiPhoto } from "react-icons/hi2"
 import MessageInput from "../messageInput/MessageInput"
 import { CldUploadButton } from "next-cloudinary"
+import { useRef } from "react"
+import { debounce } from "lodash"
+import useTypingStatus from "@/app/hooks/useTypingStatus"
+import { User } from "@prisma/client"
 
-export default function Form() {
+interface FormProps {
+  currentUser: User
+}
+
+export default function Form({
+  currentUser
+}: FormProps ) {
   const { conversationId } = useConversation()
 
   const {
@@ -39,6 +49,17 @@ export default function Form() {
     })
   }
 
+  const debounceTyping = useRef(
+    debounce(() => {
+      axios.post('/api/typing')
+    }, 300)
+
+  ).current
+
+  const handleTyping = () => {
+    debounceTyping()
+  }
+
   return (
     <div 
       className="p-4 bg-white border-t flex items-center
@@ -61,6 +82,7 @@ export default function Form() {
           register={register}
           errors={errors}
           required
+          onKeyDown={handleTyping}
           placeholder="Write a message"
         />
         <button

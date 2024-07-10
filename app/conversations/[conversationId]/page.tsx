@@ -4,6 +4,7 @@ import EmptyState from "@/app/components/emptyState/EmptyState"
 import Header from "./components/header/Header"
 import Body from "./components/body/Body"
 import Form from "./components/form/Form"
+import getCurrentUser from "@/app/actions/getCurrentUser"
 
 interface IParams {
   conversationId: string
@@ -14,6 +15,7 @@ export default async function ConversationId(
 ) {
   const conversation = await getConversationById(params.conversationId)
   const message = await getMessages(params.conversationId)
+  const currentUser = await getCurrentUser()
 
   if(!conversation) {
     return (
@@ -30,7 +32,7 @@ export default async function ConversationId(
       <div className="h-full flex flex-col">
         <Header conversation={conversation} />
         <Body initialMessages={message} />
-        <Form />
+        <Form currentUser={currentUser!} />
       </div>
     </div>
   )

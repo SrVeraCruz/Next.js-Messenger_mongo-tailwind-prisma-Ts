@@ -13,6 +13,7 @@ import { useSession } from "next-auth/react"
 import { pusherClient } from "@/app/libs/pusher"
 import { find } from "lodash"
 import MobileHeader from "@/app/components/sidebar/MobileHeader"
+import useTypingStatus from "@/app/hooks/useTypingStatus"
 
 interface ConversationListProps {
   users: User[]
@@ -28,6 +29,7 @@ export default function ConversationList({
   const session = useSession()
   const [items, setItems] = useState(initialItems)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const { addTypingMember, removeTypingMember } = useTypingStatus()
 
   const router = useRouter()
 
@@ -88,6 +90,22 @@ export default function ConversationList({
       channel.unsubscribe()
     }
   }, [pusherKey, conversationId, router])
+
+  useEffect(() => {
+    const channel = pusherClient.subscribe('chat')
+
+    const typingHandler = (id: string) => {
+      addTypingMember(id)
+      setTimeout(() => removeTypingMember(id), 3000)
+    }
+
+    channel.bind('typing', typingHandler)
+
+    return () => {
+      channel.unbind('typing', typingHandler)
+      channel.unsubscribe()
+    }
+  }, [addTypingMember, removeTypingMember])
 
   return (
     <>

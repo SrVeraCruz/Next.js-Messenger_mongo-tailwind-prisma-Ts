@@ -10,11 +10,13 @@ import {
 } from "@headlessui/react"
 import { Conversation, User } from "@prisma/client"
 import { format } from "date-fns"
-import { Fragment, useMemo, useState } from "react"
+import { Fragment, useEffect, useMemo, useState } from "react"
 import { IoClose, IoTrash } from "react-icons/io5"
 import ConfirmModal from "../confirmModal/ConfirmModal"
 import AvatarGroup from "@/app/components/avatarGroup/AvatarGroup"
 import useActiveList from "@/app/hooks/useActiveList"
+import useTypingStatus from "@/app/hooks/useTypingStatus"
+import { pusherClient } from "@/app/libs/pusher"
 
 interface ProfileDrawerProps {
   isOpen: boolean,
@@ -31,6 +33,7 @@ export default function ProfileDrawer({
 }: ProfileDrawerProps) {
   const otherUser = useOtherUser(data)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const { addTypingMember, removeTypingMember, typingMembers } = useTypingStatus()
 
   const { members } = useActiveList()
   const isActive = members.indexOf(otherUser.email!) !== -1
@@ -43,13 +46,37 @@ export default function ProfileDrawer({
     return data?.name || otherUser?.name
   }, [data?.name, otherUser?.name])
 
+  const isTyping = useMemo(() => {
+    return typingMembers.includes(otherUser.id)
+  }, [typingMembers, otherUser?.id]) 
+
   const statusText = useMemo(() => {
     if(data.isGroup) {
       return `${data.users.length} members`
     }
 
+    if(isTyping && !data.isGroup) {
+      return 'typing...'
+    }
+
     return isActive ? 'Online' : 'Offline'
   }, [data, isActive])
+
+  useEffect(() => {
+    const channel = pusherClient.subscribe('chat')
+
+    const typingHandler = (id: string) => {
+      addTypingMember(id)
+      setTimeout(() => removeTypingMember(id), 3000)
+    }
+
+    channel.bind('typing', typingHandler)
+
+    return () => {
+      channel.unbind('typing', typingHandler)
+      channel.unsubscribe()
+    }
+  }, [addTypingMember, removeTypingMember])
   
   return (
     <>

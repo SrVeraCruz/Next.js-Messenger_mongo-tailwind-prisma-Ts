@@ -4,11 +4,13 @@ import Avatar from "@/app/components/avatar/Avatar"
 import useOtherUser from "@/app/hooks/useOtherUser"
 import { Conversation, User } from "@prisma/client"
 import Link from "next/link"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { HiChevronLeft, HiEllipsisHorizontal } from "react-icons/hi2"
 import ProfileDrawer from "../profileDrawer/ProfileDrawer"
 import AvatarGroup from "@/app/components/avatarGroup/AvatarGroup"
 import useActiveList from "@/app/hooks/useActiveList"
+import { pusherClient } from "@/app/libs/pusher"
+import useTypingStatus from "@/app/hooks/useTypingStatus"
 
 interface HeaderProps {
   conversation: Conversation & {
@@ -21,17 +23,43 @@ export default function Header({
 }: HeaderProps) {
   const otherUser = useOtherUser(conversation)
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const { addTypingMember, removeTypingMember, typingMembers } = useTypingStatus()
 
   const { members } = useActiveList()
   const isActive = members.indexOf(otherUser.email!) !== -1
+
+  const isTyping = useMemo(() => {
+    return typingMembers.includes(otherUser.id)
+  }, [typingMembers, otherUser?.id]) 
 
   const statusText = useMemo(() => {
     if(conversation.isGroup) {
       return `${conversation.users.length} members`
     }
 
+    if(isTyping && !conversation.isGroup) {
+      return 'typing...'
+    }
+
     return isActive ? 'Online' : 'Offline'
   }, [conversation, isActive])
+
+  useEffect(() => {
+    const channel = pusherClient.subscribe('chat')
+
+    const typingHandler = (id: string) => {
+      addTypingMember(id)
+      setTimeout(() => removeTypingMember(id), 3000)
+    }
+
+    channel.bind('typing', typingHandler)
+
+    return () => {
+      channel.unbind('typing', typingHandler)
+      channel.unsubscribe()
+    }
+  }, [addTypingMember, removeTypingMember])
+
 
   return (
     <>

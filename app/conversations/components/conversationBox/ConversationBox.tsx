@@ -1,6 +1,7 @@
 import Avatar from "@/app/components/avatar/Avatar"
 import AvatarGroup from "@/app/components/avatarGroup/AvatarGroup"
 import useOtherUser from "@/app/hooks/useOtherUser"
+import useTypingStatus from "@/app/hooks/useTypingStatus"
 import { FullConversationType } from "@/app/types"
 import clsx from "clsx"
 import { format } from "date-fns"
@@ -16,10 +17,11 @@ interface ConversationBoxProps {
 export default function ConversationBox({
   data,
   selected
-}: ConversationBoxProps) {
+}: ConversationBoxProps ) {
   const otherUser = useOtherUser(data)
   const session = useSession()
   const router = useRouter()
+  const { typingMembers } = useTypingStatus()
 
   const handleClick = useCallback(() => {
     router.push(`/conversations/${data.id}`)
@@ -51,7 +53,15 @@ export default function ConversationBox({
     ).length !== 0
   }, [userEmail, lastMessage])
 
+  const isTyping = useMemo(() => {
+    return typingMembers.includes(otherUser.id)
+  }, [typingMembers, otherUser?.id]) 
+
   const lastMessageText = useMemo(() => {
+    if(isTyping && !data?.isGroup) {
+      return 'typing...'
+    }
+
     if(lastMessage?.image) {
       return 'Sent an image';
     }
@@ -61,7 +71,7 @@ export default function ConversationBox({
     }
 
     return 'Started a conversation'
-  }, [lastMessage])
+  }, [lastMessage, isTyping, data?.isGroup])
 
   return (
     <div
