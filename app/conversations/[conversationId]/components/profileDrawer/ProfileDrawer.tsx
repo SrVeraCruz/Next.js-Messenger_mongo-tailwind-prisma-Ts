@@ -60,7 +60,7 @@ export default function ProfileDrawer({
     }
 
     return isActive ? 'Online' : 'Offline'
-  }, [data, isActive])
+  }, [data, isActive, isTyping])
   
   return (
     <>

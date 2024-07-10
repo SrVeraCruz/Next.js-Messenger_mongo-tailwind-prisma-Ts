@@ -42,7 +42,7 @@ export default function Header({
     }
 
     return isActive ? 'Online' : 'Offline'
-  }, [conversation, isActive])
+  }, [conversation, isActive, isTyping])
 
 
   return (
