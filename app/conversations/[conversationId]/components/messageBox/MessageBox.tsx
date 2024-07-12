@@ -63,6 +63,7 @@ export default function MessageBox({
           {data?.body}
           <ImageModal 
             src={data?.image}
+            filename={data?.sender?.name!}
             isOpen={imageModalOpen}
             onClose={() => setImageModalOpen(false)}
           />
